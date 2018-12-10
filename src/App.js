@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import TodoList from './TodoList'
+import AddTodoItem from './AddTodoItem'
 import TodoItems from './TodoItems'
 
 class App extends Component {
   constructor() {
     super();
-
-    this.inputElement = React.createRef();
 
     this.state = {
       items: [],
@@ -31,6 +29,10 @@ class App extends Component {
 
     if (newItem.text !== '') {
       console.log(newItem);
+      if (newItem.text.length > process.env.REACT_APP_INPUT_LIMIT) {
+        throw new Error("can't store a task name that long!");
+      }
+
       const items = [...this.state.items, newItem];
 
       this.setState({
@@ -52,11 +54,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <TodoList
+        <AddTodoItem
           addItem={this.addItem}
-          inputElement={this.inputElement}
           handleInput={this.handleInput}
-          currentItem={this.state.currentItem}
+          inputValue={this.state.currentItem}
         />
         <TodoItems entries={this.state.items} deleteItem={this.deleteItem} />
       </div>
